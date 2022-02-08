@@ -1,0 +1,347 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="cxpModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="conceptoDePago">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="100" />
+          <Property Name="Estado" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="proveedores">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="75" />
+          <Property Name="tipoPersona" Type="int" />
+          <Property Name="cedula" Type="varchar" MaxLength="25" />
+          <Property Name="balance" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Estado" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="solicitudesCheques">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="noSolicitud" Type="int" Nullable="false" />
+          <Property Name="idProveedor" Type="int" Nullable="false" />
+          <Property Name="fecha" Type="datetime" />
+          <Property Name="monto" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="concepto" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tiposPersona">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="transacciones">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="noDocumento" Type="int" Nullable="false" />
+          <Property Name="conceptoDeuda" Type="int" />
+          <Property Name="fecha" Type="datetime" />
+          <Property Name="monto" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="fechaRegistro" Type="datetime" />
+          <Property Name="idProveedor" Type="int" />
+          <Property Name="Estado" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_proveedores_tiposPersona">
+          <End Role="tiposPersona" Type="Self.tiposPersona" Multiplicity="0..1" />
+          <End Role="proveedores" Type="Self.proveedores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tiposPersona">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="proveedores">
+              <PropertyRef Name="tipoPersona" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_solicitudesCheques_proveedores">
+          <End Role="proveedores" Type="Self.proveedores" Multiplicity="1" />
+          <End Role="solicitudesCheques" Type="Self.solicitudesCheques" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="proveedores">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="solicitudesCheques">
+              <PropertyRef Name="idProveedor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transacciones_conceptoDePago">
+          <End Role="conceptoDePago" Type="Self.conceptoDePago" Multiplicity="0..1" />
+          <End Role="transacciones" Type="Self.transacciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="conceptoDePago">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="transacciones">
+              <PropertyRef Name="conceptoDeuda" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transacciones_proveedores">
+          <End Role="proveedores" Type="Self.proveedores" Multiplicity="0..1" />
+          <End Role="transacciones" Type="Self.transacciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="proveedores">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="transacciones">
+              <PropertyRef Name="idProveedor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="cxpModelStoreContainer">
+          <EntitySet Name="conceptoDePago" EntityType="Self.conceptoDePago" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="proveedores" EntityType="Self.proveedores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="solicitudesCheques" EntityType="Self.solicitudesCheques" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tiposPersona" EntityType="Self.tiposPersona" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="transacciones" EntityType="Self.transacciones" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_proveedores_tiposPersona" Association="Self.FK_proveedores_tiposPersona">
+            <End Role="tiposPersona" EntitySet="tiposPersona" />
+            <End Role="proveedores" EntitySet="proveedores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_solicitudesCheques_proveedores" Association="Self.FK_solicitudesCheques_proveedores">
+            <End Role="proveedores" EntitySet="proveedores" />
+            <End Role="solicitudesCheques" EntitySet="solicitudesCheques" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transacciones_conceptoDePago" Association="Self.FK_transacciones_conceptoDePago">
+            <End Role="conceptoDePago" EntitySet="conceptoDePago" />
+            <End Role="transacciones" EntitySet="transacciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transacciones_proveedores" Association="Self.FK_transacciones_proveedores">
+            <End Role="proveedores" EntitySet="proveedores" />
+            <End Role="transacciones" EntitySet="transacciones" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="cxpModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="conceptoDePago">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Estado" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="transacciones" Relationship="Self.FK_transacciones_conceptoDePago" FromRole="conceptoDePago" ToRole="transacciones" />
+        </EntityType>
+        <EntityType Name="proveedore">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="75" FixedLength="false" Unicode="false" />
+          <Property Name="tipoPersona" Type="Int32" />
+          <Property Name="cedula" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="balance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Estado" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tiposPersona" Relationship="Self.FK_proveedores_tiposPersona" FromRole="proveedores" ToRole="tiposPersona" />
+          <NavigationProperty Name="solicitudesCheques" Relationship="Self.FK_solicitudesCheques_proveedores" FromRole="proveedores" ToRole="solicitudesCheques" />
+          <NavigationProperty Name="transacciones" Relationship="Self.FK_transacciones_proveedores" FromRole="proveedores" ToRole="transacciones" />
+        </EntityType>
+        <EntityType Name="solicitudesCheque">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="noSolicitud" Type="Int32" Nullable="false" />
+          <Property Name="idProveedor" Type="Int32" Nullable="false" />
+          <Property Name="fecha" Type="DateTime" Precision="3" />
+          <Property Name="monto" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="concepto" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="proveedore" Relationship="Self.FK_solicitudesCheques_proveedores" FromRole="solicitudesCheques" ToRole="proveedores" />
+        </EntityType>
+        <EntityType Name="tiposPersona">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="proveedores" Relationship="Self.FK_proveedores_tiposPersona" FromRole="tiposPersona" ToRole="proveedores" />
+        </EntityType>
+        <EntityType Name="transaccione">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="noDocumento" Type="Int32" Nullable="false" />
+          <Property Name="conceptoDeuda" Type="Int32" />
+          <Property Name="fecha" Type="DateTime" Precision="3" />
+          <Property Name="monto" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="fechaRegistro" Type="DateTime" Precision="3" />
+          <Property Name="idProveedor" Type="Int32" />
+          <Property Name="Estado" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="conceptoDePago" Relationship="Self.FK_transacciones_conceptoDePago" FromRole="transacciones" ToRole="conceptoDePago" />
+          <NavigationProperty Name="proveedore" Relationship="Self.FK_transacciones_proveedores" FromRole="transacciones" ToRole="proveedores" />
+        </EntityType>
+        <Association Name="FK_transacciones_conceptoDePago">
+          <End Role="conceptoDePago" Type="Self.conceptoDePago" Multiplicity="0..1" />
+          <End Role="transacciones" Type="Self.transaccione" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="conceptoDePago">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="transacciones">
+              <PropertyRef Name="conceptoDeuda" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_proveedores_tiposPersona">
+          <End Role="tiposPersona" Type="Self.tiposPersona" Multiplicity="0..1" />
+          <End Role="proveedores" Type="Self.proveedore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tiposPersona">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="proveedores">
+              <PropertyRef Name="tipoPersona" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_solicitudesCheques_proveedores">
+          <End Role="proveedores" Type="Self.proveedore" Multiplicity="1" />
+          <End Role="solicitudesCheques" Type="Self.solicitudesCheque" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="proveedores">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="solicitudesCheques">
+              <PropertyRef Name="idProveedor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transacciones_proveedores">
+          <End Role="proveedores" Type="Self.proveedore" Multiplicity="0..1" />
+          <End Role="transacciones" Type="Self.transaccione" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="proveedores">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="transacciones">
+              <PropertyRef Name="idProveedor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="cxpEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="conceptoDePagoes" EntityType="Self.conceptoDePago" />
+          <EntitySet Name="proveedores" EntityType="Self.proveedore" />
+          <EntitySet Name="solicitudesCheques" EntityType="Self.solicitudesCheque" />
+          <EntitySet Name="tiposPersonas" EntityType="Self.tiposPersona" />
+          <EntitySet Name="transacciones" EntityType="Self.transaccione" />
+          <AssociationSet Name="FK_transacciones_conceptoDePago" Association="Self.FK_transacciones_conceptoDePago">
+            <End Role="conceptoDePago" EntitySet="conceptoDePagoes" />
+            <End Role="transacciones" EntitySet="transacciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_proveedores_tiposPersona" Association="Self.FK_proveedores_tiposPersona">
+            <End Role="tiposPersona" EntitySet="tiposPersonas" />
+            <End Role="proveedores" EntitySet="proveedores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_solicitudesCheques_proveedores" Association="Self.FK_solicitudesCheques_proveedores">
+            <End Role="proveedores" EntitySet="proveedores" />
+            <End Role="solicitudesCheques" EntitySet="solicitudesCheques" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transacciones_proveedores" Association="Self.FK_transacciones_proveedores">
+            <End Role="proveedores" EntitySet="proveedores" />
+            <End Role="transacciones" EntitySet="transacciones" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="cxpModelStoreContainer" CdmEntityContainer="cxpEntities">
+          <EntitySetMapping Name="conceptoDePagoes">
+            <EntityTypeMapping TypeName="cxpModel.conceptoDePago">
+              <MappingFragment StoreEntitySet="conceptoDePago">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="proveedores">
+            <EntityTypeMapping TypeName="cxpModel.proveedore">
+              <MappingFragment StoreEntitySet="proveedores">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="tipoPersona" ColumnName="tipoPersona" />
+                <ScalarProperty Name="cedula" ColumnName="cedula" />
+                <ScalarProperty Name="balance" ColumnName="balance" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="solicitudesCheques">
+            <EntityTypeMapping TypeName="cxpModel.solicitudesCheque">
+              <MappingFragment StoreEntitySet="solicitudesCheques">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="noSolicitud" ColumnName="noSolicitud" />
+                <ScalarProperty Name="idProveedor" ColumnName="idProveedor" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="monto" ColumnName="monto" />
+                <ScalarProperty Name="concepto" ColumnName="concepto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tiposPersonas">
+            <EntityTypeMapping TypeName="cxpModel.tiposPersona">
+              <MappingFragment StoreEntitySet="tiposPersona">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="transacciones">
+            <EntityTypeMapping TypeName="cxpModel.transaccione">
+              <MappingFragment StoreEntitySet="transacciones">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="noDocumento" ColumnName="noDocumento" />
+                <ScalarProperty Name="conceptoDeuda" ColumnName="conceptoDeuda" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="monto" ColumnName="monto" />
+                <ScalarProperty Name="fechaRegistro" ColumnName="fechaRegistro" />
+                <ScalarProperty Name="idProveedor" ColumnName="idProveedor" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
